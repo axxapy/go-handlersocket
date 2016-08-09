@@ -41,6 +41,11 @@ func (this *HandlerSocket) OpenReadIndex(db string, table string, index_name str
 	}}
 }
 
-type hs_IndexWrite struct {
-	base_index
+func (this *HandlerSocket) OpenWriteIndex(db string, table string, index_name string, columns ...string) *ReadIndex {
+	spec := &hs_index_spec{db_name: db, table_name: table, index_name: index_name, columns: columns}
+	return &WriteIndex{base_index{
+		spec: spec,
+		conn_pool: this.conn_pool_read,
+		opened:false,
+	}}
 }
