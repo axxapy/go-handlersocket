@@ -65,7 +65,7 @@ func (this *hs_index) open(conn *hs_Connection) error {
 	a := []string{index_num, this.spec.db_name, this.spec.table_name, this.spec.index_name, cols}
 
 	//conn.mutex.Lock()
-	conn.chan_write <- &hs_cmd_openindex{command: "P", params: a}
+	conn.chan_write <- &cmd_openindex{command: "P", params: a}
 	message := <-conn.chan_read
 	//conn.mutex.Unlock()
 
