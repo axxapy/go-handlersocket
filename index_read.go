@@ -18,7 +18,6 @@ func (this *ReadIndex) Find(oper string, limit int, offset int, vals ...string) 
 	if err != nil {
 		return nil, err
 	}
-
 	defer this.conn_pool.releaseConnection(conn)
 
 	lg.V(TAG, "OPENING INDEX...")
@@ -35,7 +34,7 @@ func (this *ReadIndex) Find(oper string, limit int, offset int, vals ...string) 
 	index_num := conn.getIndexNum(this.spec)
 
 	//conn.mutex.Lock()
-	conn.chan_write <- &hs_cmd_find{command: index_num, params: a, limit: limit, offset: offset}
+	conn.chan_write <- &cmd_find{command: index_num, params: a, limit: limit, offset: offset}
 	message := <-conn.chan_read
 	//conn.mutex.Unlock()
 
