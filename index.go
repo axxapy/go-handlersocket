@@ -6,7 +6,7 @@ import (
 	"errors"
 )
 
-type hs_index struct {
+type base_index struct {
 	conn_pool *connection_pool
 	spec      *hs_index_spec
 	opened    bool
@@ -23,7 +23,7 @@ func (this *hs_index_spec) hash() string {
 	return this.db_name + ":" + this.table_name + ":" + this.index_name + ":" + strings.Join(this.columns, ",")
 }
 
-func (this *hs_index)parseResult(resp Response) []map[string]interface{} {
+func (this *base_index)parseResult(resp Response) []map[string]interface{} {
 	fieldCount, _ := strconv.Atoi(resp.Data[0])
 	remainingFields := len(resp.Data) - 1
 	if fieldCount <= 0 {
@@ -51,7 +51,7 @@ func (this *hs_index)parseResult(resp Response) []map[string]interface{} {
 	return rows
 }
 
-func (this *hs_index) open(conn *hs_Connection) error {
+func (this *base_index) open(conn *hs_Connection) error {
 	if _, ok := conn.indexes[this.spec.hash()]; ok {
 		return nil
 	}

@@ -32,9 +32,9 @@ type hs_chan_writer interface {
 	write(w io.Writer) (err error)
 }
 
-func (this *HandlerSocket) OpenReadIndex(db string, table string, index_name string, columns ...string) *hs_IndexRead {
+func (this *HandlerSocket) OpenReadIndex(db string, table string, index_name string, columns ...string) *ReadIndex {
 	spec := &hs_index_spec{db_name: db, table_name: table, index_name: index_name, columns: columns}
-	return &hs_IndexRead{hs_index{
+	return &ReadIndex{base_index{
 		spec: spec,
 		conn_pool: this.conn_pool_read,
 		opened:false,
@@ -42,5 +42,5 @@ func (this *HandlerSocket) OpenReadIndex(db string, table string, index_name str
 }
 
 type hs_IndexWrite struct {
-	hs_index
+	base_index
 }

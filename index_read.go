@@ -7,13 +7,13 @@ import (
 	"github.com/axxapy/go-handlersocket/lg"
 )
 
-type hs_IndexRead struct {
-	hs_index
+type ReadIndex struct {
+	base_index
 }
 
 const TAG = "index:read"
 
-func (this *hs_IndexRead) Find(oper string, limit int, offset int, vals ...string) ([]map[string]interface{}, error) {
+func (this *ReadIndex) Find(oper string, limit int, offset int, vals ...string) ([]map[string]interface{}, error) {
 	conn, err := this.conn_pool.getConnection()
 	if err != nil {
 		return nil, err
