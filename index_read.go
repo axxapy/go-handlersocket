@@ -4,7 +4,7 @@ import (
 	"strings"
 	"strconv"
 	"errors"
-	"authorizer-proxy/lg"
+	"github.com/axxapy/go-handlersocket/lg"
 )
 
 type hs_IndexRead struct {
