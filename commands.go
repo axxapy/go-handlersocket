@@ -9,7 +9,7 @@ import (
 
 type cmd_openindex struct {
 	index_num  string
-	index_spec hs_index_spec
+	index_spec *hs_index_spec
 }
 
 type cmd_find struct {
@@ -63,9 +63,9 @@ func (f *cmd_insert) write(w io.Writer) error {
 }
 
 func (f *cmd_update) write(w io.Writer) error {
-	limit := len(f.values)
+	limit  := len(f.values)
 	offset := 0
-	where := []string{f.assert_type, strconv.Itoa(len(f.keys)), f.keys}
+	where  := []string{f.assert_type, strconv.Itoa(len(f.keys)), strings.Join(f.keys, "\t")}
 	if _, err := fmt.Fprintf(w, "%s\t%s\t%d\t%d\t%s\t%s\n", f.index_num, strings.Join(where, "\t"), limit, offset, "U", strings.Join(f.values, "\t")); err != nil {
 		return err
 	}
@@ -73,9 +73,9 @@ func (f *cmd_update) write(w io.Writer) error {
 }
 
 func (f *cmd_delete) write(w io.Writer) error {
-	where := []string{f.assert_type, strconv.Itoa(len(f.keys)), f.keys}
-	limit := 0
+	limit  := 0
 	offset := 0
+	where  := []string{f.assert_type, strconv.Itoa(len(f.keys)), strings.Join(f.keys, "\t")}
 	if _, err := fmt.Fprintf(w, "%s\t%s\t%d\t%d\t%s\n", f.index_num, strings.Join(where, "\t"), limit, offset, "D"); err != nil {
 		return err
 	}

@@ -10,7 +10,7 @@ type WriteIndex struct {
 	base_index
 }
 
-func (this *WriteIndex) Delete(assert_type string, keys map[string]interface{}) (err error) {
+func (this *WriteIndex) Delete(assert_type string, keys map[string]interface{}) (modified_rows int, err error) {
 	conn, err := this.conn_pool.getConnection()
 	if err != nil {
 		return 0, err
@@ -32,7 +32,12 @@ func (this *WriteIndex) Delete(assert_type string, keys map[string]interface{}) 
 		return 0, errors.New("Error")
 	}
 
-	return strconv.Atoi(strings.TrimSpace(message.Data[1])), nil
+	modified, err := strconv.Atoi(strings.TrimSpace(message.Data[1]))
+	if err != nil {
+		return 0, err
+	}
+
+	return modified, nil
 }
 
 func (this *WriteIndex) Update(assert_type string, keys map[string]interface{}, values map[string]interface{}) (modified_rows int, err error) {
@@ -58,18 +63,23 @@ func (this *WriteIndex) Update(assert_type string, keys map[string]interface{}, 
 		return 0, errors.New("Error")
 	}
 
-	return strconv.Atoi(strings.TrimSpace(message.Data[1])), nil
+	modified, err := strconv.Atoi(strings.TrimSpace(message.Data[1]))
+	if err != nil {
+		return 0, err
+	}
+
+	return modified, nil
 }
 
 func (this *WriteIndex) Insert(vals ...string) (err error) {
 	conn, err := this.conn_pool.getConnection()
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer this.conn_pool.releaseConnection(conn)
 
 	if err := this.open(conn); err != nil {
-		return nil, err
+		return err
 	}
 
 	index_num := conn.getIndexNum(this.spec)

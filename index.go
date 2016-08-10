@@ -28,7 +28,7 @@ func (this *base_index) sortFieldsList(data map[string]interface{}) []string {
 	num := 0
 	for _, name := range this.spec.columns {
 		if val, ok := data[name]; ok {
-			result[num] = val
+			result[num] = val.(string)
 			num++
 		}
 	}
@@ -72,12 +72,8 @@ func (this *base_index) open(conn *hs_Connection) error {
 		return err
 	}
 
-	index_num := conn.getIndexNum(this.spec)
-	cols := strings.Join(this.spec.columns, ",")
-	a := []string{index_num, this.spec.db_name, this.spec.table_name, this.spec.index_name, cols}
-
 	//conn.mutex.Lock()
-	conn.chan_write <- &cmd_openindex{index_num: index_num, index_spec: this.spec}
+	conn.chan_write <- &cmd_openindex{index_num: conn.getIndexNum(this.spec), index_spec: this.spec}
 	message := <-conn.chan_read
 	//conn.mutex.Unlock()
 
