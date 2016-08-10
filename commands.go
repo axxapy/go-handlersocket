@@ -8,8 +8,8 @@ import (
 )
 
 type cmd_openindex struct {
-	command string
-	params  []string
+	index_num  string
+	index_spec hs_index_spec
 }
 
 type cmd_find struct {
@@ -38,9 +38,13 @@ type cmd_delete struct {
 }
 
 func (f *cmd_openindex) write(w io.Writer) error {
-	if _, err := fmt.Fprintf(w, "%s\t%s\n", f.command, strings.Join(f.params, "\t")); err != nil {
+	cols := strings.Join(f.index_spec.columns, ",")
+	params := []string{f.index_num, f.index_spec.db_name, f.index_spec.table_name, f.index_spec.index_name, cols}
+
+	if _, err := fmt.Fprintf(w, "P\t%s\n", strings.Join(params, "\t")); err != nil {
 		return err
 	}
+
 	return nil
 }
 
