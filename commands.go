@@ -67,3 +67,13 @@ func (f *cmd_update) write(w io.Writer) error {
 	}
 	return nil
 }
+
+func (f *cmd_delete) write(w io.Writer) error {
+	where := []string{f.assert_type, strconv.Itoa(len(f.keys)), f.keys}
+	limit := 0
+	offset := 0
+	if _, err := fmt.Fprintf(w, "%s\t%s\t%d\t%d\t%s\t%s\n", f.index_num, strings.Join(where, "\t"), limit, offset, "D"); err != nil {
+		return err
+	}
+	return nil
+}
