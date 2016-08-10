@@ -23,6 +23,18 @@ func (this *hs_index_spec) hash() string {
 	return this.db_name + ":" + this.table_name + ":" + this.index_name + ":" + strings.Join(this.columns, ",")
 }
 
+func (this *base_index) sortFieldsList(data map[string]interface{}) []string {
+	result := make([]string, len(data))
+	num := 0
+	for _, name := range this.spec.columns {
+		if val, ok := data[name]; ok {
+			result[num] = val
+			num++
+		}
+	}
+	return result
+}
+
 func (this *base_index)parseResult(resp Response) []map[string]interface{} {
 	fieldCount, _ := strconv.Atoi(resp.Data[0])
 	remainingFields := len(resp.Data) - 1

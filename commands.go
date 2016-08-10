@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 	"io"
+	"strconv"
 )
 
 type cmd_openindex struct {
@@ -24,12 +25,16 @@ type cmd_insert struct {
 }
 
 type cmd_update struct {
-	command  string
-	criteria []string
-	limit    int
-	offset   int
-	mop      string
-	newvals  []string
+	index_num   string
+	assert_type string
+	keys        []string
+	values      []string
+}
+
+type cmd_delete struct {
+	index_num   string
+	assert_type string
+	keys        []string
 }
 
 func (f *cmd_openindex) write(w io.Writer) error {
@@ -54,7 +59,10 @@ func (f *cmd_insert) write(w io.Writer) error {
 }
 
 func (f *cmd_update) write(w io.Writer) error {
-	if _, err := fmt.Fprintf(w, "%s\t%s\t%d\t%d\t%s\t%s\n", f.command, strings.Join(f.criteria, "\t"), f.limit, f.offset, f.mop, strings.Join(f.newvals, "\t")); err != nil {
+	limit := len(f.values)
+	offset := 0
+	where := []string{f.assert_type, strconv.Itoa(len(f.keys)), f.keys}
+	if _, err := fmt.Fprintf(w, "%s\t%s\t%d\t%d\t%s\t%s\n", f.index_num, strings.Join(where, "\t"), limit, offset, "U", strings.Join(f.values, "\t")); err != nil {
 		return err
 	}
 	return nil

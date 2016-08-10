@@ -5,6 +5,13 @@ import (
 	"io"
 )
 
+const ASSERT_EQ = "=";
+const ASSERT_NE = "!=";
+const ASSERT_GT = ">";
+const ASSERT_LT = "<";
+const ASSERT_LE = "<=";
+const ASSERT_GE = ">=";
+
 type HandlerSocket struct {
 	conn_pool_read  *connection_pool
 	conn_pool_write *connection_pool
