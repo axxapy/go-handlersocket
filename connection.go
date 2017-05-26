@@ -31,7 +31,7 @@ func NewConnection(addr string) *hs_Connection {
 	}
 }
 
-func (this *hs_Connection) close() {
+func (this *hs_Connection) closeConn() {
 	if this.conn == nil {
 		return
 	}
@@ -44,7 +44,7 @@ func (this *hs_Connection) close() {
 }
 
 func (this *hs_Connection) reader() {
-	defer this.close()
+	defer this.closeConn()
 
 	br := bufio.NewReader(this.conn)
 	var retString string
@@ -73,7 +73,7 @@ func (this *hs_Connection) reader() {
 }
 
 func (this *hs_Connection) writer() {
-	defer this.close()
+	defer this.closeConn()
 
 	bw := bufio.NewWriter(this.conn)
 
